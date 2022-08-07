@@ -4,7 +4,15 @@ const onClickAdd = () => {
   // テキストボックスの値を取得し、初期化する
   const inputText = document.getElementById("add-text").value;
   document.getElementById("add-text").value = "";
+  cretateIncompleteList(inputText);
+};
 
+const deleteFormIncompleteList = (taget) => {
+  document.getElementById("incomplete-list").removeChild(taget);
+};
+
+// 未完了リストに追加する関数
+const cretateIncompleteList = (text) => {
   // DOMを作成
   // div生成
   const div = document.createElement("div");
@@ -12,18 +20,57 @@ const onClickAdd = () => {
 
   // liタグ生成
   const li = document.createElement("li");
-  li.innerText = inputText;
+  li.innerText = text;
 
   // button(完了)タグ生成
   const completeButton = document.createElement("button");
   completeButton.innerText = "完了";
-  completeButton.addEventListener("click", () => alert(2));
+  completeButton.addEventListener("click", () => {
+    // 押された完了ボタンの親タグ(div)を未完了リストから削除
+    // const completeTeret = completeButton.parentNode;
+    // document.getElementById("incomplete-list").removeChild(completeTeret);
+    deleteFormIncompleteList(completeButton.parentNode);
+
+    // 完了リストに追加する要素
+    const addTarget = completeButton.parentNode;
+    const text = addTarget.firstChild.innerText;
+
+    // div以下を初期化
+    addTarget.textContent = null;
+
+    // liタグ生成
+    const li = document.createElement("li");
+    li.innerText = text;
+
+    // buttonタグ生成
+    const backButton = document.createElement("button");
+    backButton.innerText = "戻す";
+    backButton.addEventListener("click", () => {
+      // 押された戻すボタンの親タグ(div)を完了リストから削除
+      const deleteTarget = backButton.parentNode;
+      document.getElementById("complete-list").removeChild(deleteTarget);
+
+      // テキスト取得
+      const text = backButton.parentNode.firstChild.innerText;
+      cretateIncompleteList(text);
+    });
+
+    // divタグの子要素に各要素を設定
+    addTarget.appendChild(li);
+    addTarget.appendChild(backButton);
+
+    // 完了リストに追加
+    document.getElementById("complete-list").appendChild(addTarget);
+  });
 
   // button(削除)タグ生成
   const deleteButton = document.createElement("button");
   deleteButton.innerText = "削除";
   deleteButton.addEventListener("click", () => {
     // 押された削除ボタンの親タグ(div)を未完了リストから削除
+    // const deleteTeret = deleteButton.parentNode;
+    // document.getElementById("incomplete-list").removeChild(deleteTeret);
+    deleteFormIncompleteList(deleteButton.parentNode);
   });
 
   // divタグの子要素に各要素を設定
@@ -33,8 +80,6 @@ const onClickAdd = () => {
 
   // 未完了リストに追加
   document.getElementById("incomplete-list").appendChild(div);
-
-  console.log(li);
 };
 
 document
